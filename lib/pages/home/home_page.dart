@@ -29,77 +29,96 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   padding: const EdgeInsets.fromLTRB(20, 60, 20, 0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // Memberikan ruang antar konten
+                  child: Column(
                     children: [
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const CircleAvatar(
-                            radius: 28,
-                            backgroundImage: NetworkImage(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGSvEm0etPR7Ny96YCT_MDRqQ8B5TqjA7VPw&s',
-                            ),
+                          Text(
+                            'Terhubung dengan data',
+                            style: TextStyle(color: Colors.white),
                           ),
-                          const SizedBox(width: 12),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Selamat pagi,',
-                                style: TextStyle(
-                                  fontFamily: 'SFProDisplay',
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const Text(
-                                'Sari Wijayanti',
-                                style: TextStyle(
-                                  fontFamily: 'SFProDisplay',
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                          SizedBox(width: 10),
+                          Image.asset(
+                            'assets/images/logo-satu-sehat.png',
+                            height: 20,
                           ),
                         ],
                       ),
-                      // Widget Notification Bell
-                      Stack(
+                      SizedBox(height: 8),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment
+                            .spaceBetween, // Memberikan ruang antar konten
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.notifications,
-                              color: Color(0xFF537C57),
-                              size: 28,
-                            ),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFD38D8D,
-                                ), // Warna merah muda dari UI
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CircleAvatar(
+                                radius: 28,
+                                backgroundImage: NetworkImage(
+                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGSvEm0etPR7Ny96YCT_MDRqQ8B5TqjA7VPw&s',
                                 ),
                               ),
-                            ),
+                              const SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Selamat pagi,',
+                                    style: TextStyle(
+                                      fontFamily: 'SFProDisplay',
+                                      color: Colors.white.withOpacity(0.7),
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Sari Wijayanti',
+                                    style: TextStyle(
+                                      fontFamily: 'SFProDisplay',
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          // Widget Notification Bell
+                          Stack(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.notifications,
+                                  color: Color(0xFF537C57),
+                                  size: 28,
+                                ),
+                              ),
+                              Positioned(
+                                right: 2,
+                                top: 2,
+                                child: Container(
+                                  width: 12,
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    color: const Color(
+                                      0xFFD38D8D,
+                                    ), // Warna merah muda dari UI
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -107,7 +126,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 140, left: 20, right: 20),
+                  padding: const EdgeInsets.only(top: 160, left: 20, right: 20),
                   child: Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -187,8 +206,6 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 16),
             _buildAttentionSection(),
             const SizedBox(height: 16),
-            _buildEmergencySection(),
-            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -350,64 +367,6 @@ class HomePage extends StatelessWidget {
                 color: Colors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmergencySection() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9F1F1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.warning_amber_rounded, color: Color(0xFFE5A8A8)),
-              const SizedBox(width: 12),
-              Text(
-                'Segera ke faskes jika...',
-                style: TextStyle(
-                  fontFamily: 'SFProDisplay',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ...[
-            'Pendarahan tiba-tiba',
-            'Kepala pusing, pandangan kabur',
-            'Bayi tidak bergerak >12 jam',
-            'Tekanan darah ≥ 140/90',
-          ].map(
-            (item) => Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Color(0xFFEFDADA))),
-              ),
-              child: Row(
-                children: [
-                  const Text('• ', style: TextStyle(fontSize: 18)),
-                  Text(
-                    item,
-                    style: TextStyle(
-                      fontFamily: 'SFProDisplay',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
