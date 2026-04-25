@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:narabuna/pages/chatbot/chatbot_page.dart';
 import 'package:narabuna/pages/chatbot/chatbot_view_model.dart';
 import 'package:narabuna/pages/home/home_view_model.dart';
+import 'package:narabuna/pages/kondisi/kondisi_detail_page.dart';
+import 'package:narabuna/pages/kondisi/kondisi_view_model.dart';
 import 'package:narabuna/pages/profile/profile_page.dart';
 import 'package:narabuna/pages/register/register_view_model.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,7 @@ import 'package:narabuna/auth/auth_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final authState = AuthState();
   await authState.loadSession();
 
@@ -27,10 +30,15 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => ChatViewModel()),
+        ChangeNotifierProvider(create: (_) => KondisiViewModel()),
       ],
       child: const MyApp(),
     ),
   );
+}
+
+Page<dynamic> noTransitionPage(GoRouterState state, Widget child) {
+  return NoTransitionPage(key: state.pageKey, child: child);
 }
 
 class MyApp extends StatelessWidget {
@@ -61,27 +69,45 @@ class MyApp extends StatelessWidget {
       routes: [
         GoRoute(
           path: '/login',
-          builder: (context, state) => ChangeNotifierProvider(
-            create: (_) => LoginViewModel(),
-            child: const LoginPage(),
+          pageBuilder: (context, state) => noTransitionPage(
+            state,
+            ChangeNotifierProvider(
+              create: (_) => LoginViewModel(),
+              child: const LoginPage(),
+            ),
           ),
         ),
         GoRoute(
           path: '/register',
-          builder: (context, state) => const RegisterPage(),
+          pageBuilder: (context, state) =>
+              noTransitionPage(state, const RegisterPage()),
         ),
-        GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+        GoRoute(
+          path: '/home',
+          pageBuilder: (context, state) =>
+              noTransitionPage(state, const HomePage()),
+        ),
         GoRoute(
           path: '/chatbot',
-          builder: (context, state) => const ChatBotPage(),
+          pageBuilder: (context, state) =>
+              noTransitionPage(state, const ChatBotPage()),
         ),
         GoRoute(
           path: '/kondisi',
-          builder: (context, state) => const KondisiPage(),
+          pageBuilder: (context, state) =>
+              noTransitionPage(state, const KondisiPage()),
         ),
         GoRoute(
           path: '/profile',
-          builder: (context, state) => const ProfilePage(),
+          pageBuilder: (context, state) =>
+              noTransitionPage(state, const ProfilePage()),
+        ),
+        GoRoute(
+          path: '/kondisi/:id',
+          pageBuilder: (context, state) => noTransitionPage(
+            state,
+            KondisiDetailPage(visitId: state.pathParameters['id'] ?? ''),
+          ),
         ),
       ],
     );
