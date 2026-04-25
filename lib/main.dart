@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:narabuna/pages/chatbot/chatbot_page.dart';
+import 'package:narabuna/pages/home/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'SFProDisplay',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: ChatPage(),
+      home: HomePage(),
     );
   }
 }
