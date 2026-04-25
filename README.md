@@ -11,7 +11,7 @@ Frontend repository for our Hackfest UC 2026 project focused on maternal health 
 
 ## Our Team
 
-- Nada Mussaffya
+- Nada Musyaffa
 - Rafi Rahman
 - Dira Ayudia
 - Jevon Mozart
