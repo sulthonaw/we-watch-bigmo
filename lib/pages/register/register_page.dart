@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'register_view_model.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -14,11 +17,41 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nikController = TextEditingController();
 
+  void _handleRegister() async {
+    final registerVm = context.read<RegisterViewModel>();
+
+    final success = await registerVm.register(
+      fullName: _fullNameController.text,
+      username: _usernameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+      nik: _nikController.text,
+    );
+
+    if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registrasi Berhasil! Silakan masuk.'),
+          backgroundColor: Color(0xFF537C57),
+        ),
+      );
+      context.go('/login');
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(registerVm.errorMessage ?? 'Registrasi Gagal'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const Color primaryGreen = Color(0xFF537C57);
     const Color scaffoldBg = Color(0xFFF9F9F5);
     const Color inputFillColor = Color(0xFFF2F4EE);
+    final registerVm = context.watch<RegisterViewModel>();
 
     return Scaffold(
       backgroundColor: scaffoldBg,
@@ -56,9 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 24),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
@@ -71,9 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     icon: Icons.person_outline,
                     fillColor: inputFillColor,
                   ),
-
                   const SizedBox(height: 16),
-
                   _buildLabel('Username'),
                   _buildTextField(
                     controller: _usernameController,
@@ -81,9 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     icon: Icons.alternate_email,
                     fillColor: inputFillColor,
                   ),
-
                   const SizedBox(height: 16),
-
                   _buildLabel('NIK'),
                   _buildTextField(
                     controller: _nikController,
@@ -92,9 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     fillColor: inputFillColor,
                     keyboardType: TextInputType.number,
                   ),
-
                   const SizedBox(height: 16),
-
                   _buildLabel('Email'),
                   _buildTextField(
                     controller: _emailController,
@@ -103,9 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     fillColor: inputFillColor,
                     keyboardType: TextInputType.emailAddress,
                   ),
-
                   const SizedBox(height: 16),
-
                   _buildLabel('Password'),
                   _buildTextField(
                     controller: _passwordController,
@@ -114,38 +137,44 @@ class _RegisterPageState extends State<RegisterPage> {
                     isPassword: true,
                     fillColor: inputFillColor,
                   ),
-
                   const SizedBox(height: 32),
-
                   SizedBox(
                     width: double.infinity,
                     height: 56,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: registerVm.isLoading ? null : _handleRegister,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryGreen,
+                        disabledBackgroundColor: primaryGreen.withOpacity(0.6),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        'Daftar Sekarang',
-                        style: TextStyle(
-                          fontFamily: 'SFProDisplay',
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: registerVm.isLoading
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              'Daftar Sekarang',
+                              style: TextStyle(
+                                fontFamily: 'SFProDisplay',
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
                   Center(
                     child: TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => context.go('/login'),
                       child: RichText(
                         text: TextSpan(
                           text: 'Sudah punya akun? ',
@@ -169,9 +198,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 40),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -8,23 +8,23 @@ class BottomNavbarCustom extends StatelessWidget {
   const BottomNavbarCustom({super.key, required this.currentIndex});
 
   void _onItemTapped(BuildContext context, int index) {
-    // switch (index) {
-    //   case 0:
-    //     context.push('/home');
-    //     break;
-    //   case 1:
-    //     context.push('/kondisi');
-    //     break;
-    //   case 2:
-    //     context.push('/chatbot');
-    //     break;
-    //   case 3:
-    //     context.push('/todo');
-    //     break;
-    //   case 4:
-    //     context.push('/profile');
-    //     break;
-    // }
+    switch (index) {
+      case 0:
+        context.push('/home');
+        break;
+      case 1:
+        context.push('/kondisi');
+        break;
+      case 2:
+        context.push('/chatbot');
+        break;
+      case 3:
+        // context.push('/todo');
+        break;
+      case 4:
+        context.push('/profile');
+        break;
+    }
   }
 
   @override

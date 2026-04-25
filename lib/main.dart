@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:narabuna/pages/chatbot/chatbot_page.dart';
+import 'package:narabuna/pages/chatbot/chatbot_view_model.dart';
+import 'package:narabuna/pages/home/home_view_model.dart';
+import 'package:narabuna/pages/profile/profile_page.dart';
+import 'package:narabuna/pages/register/register_view_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:narabuna/pages/home/home_page.dart';
@@ -19,7 +23,10 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => authState),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => RegisterViewModel()),
+        ChangeNotifierProvider(create: (_) => ChatViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -71,6 +78,10 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: '/kondisi',
           builder: (context, state) => const KondisiPage(),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const ProfilePage(),
         ),
       ],
     );

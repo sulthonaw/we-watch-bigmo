@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:narabuna/widgets/bottom_navbar_custom.dart';
 
 class KondisiPage extends StatelessWidget {
@@ -159,7 +160,7 @@ class KondisiPage extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.person, color: Color(0xFF537C57)),
+            child: const Icon(Symbols.pregnancy, color: Color(0xFF537C57)),
           ),
           const SizedBox(width: 20),
           Text(

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:narabuna/auth/auth_state.dart';
+import 'package:narabuna/pages/chatbot/chatbot_view_model.dart';
+import 'package:provider/provider.dart';
+import 'package:narabuna/widgets/lottie_ai_loading.dart';
 
 class ChatBotPage extends StatefulWidget {
   const ChatBotPage({super.key});
@@ -9,31 +14,27 @@ class ChatBotPage extends StatefulWidget {
 
 class _ChatBotPageState extends State<ChatBotPage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
-  final List<Map<String, dynamic>> _messages = [
-    {
-      'isMe': false,
-      'text':
-          'Halo Bunda Sari! Saya Nana AI. Ada yang bisa saya bantu terkait kehamilan Bunda hari ini?',
-      'time': '09:00',
-    },
-    {
-      'isMe': true,
-      'text': 'Bagaimana cara menjaga kadar Hb agar tetap normal?',
-      'time': '09:01',
-    },
-    {
-      'isMe': false,
-      'text':
-          'Bunda bisa memperbanyak konsumsi makanan kaya zat besi seperti bayam, hati ayam, atau daging merah tanpa lemak. Jangan lupa minum tablet tambah darah sesuai anjuran bidan ya, Bun!',
-      'time': '09:01',
-    },
-  ];
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     const Color primaryGreen = Color(0xFF537C57);
     const Color scaffoldBg = Color(0xFFF9F9F5);
+
+    final chatVm = context.watch<ChatViewModel>();
+    final authState = context.read<AuthState>();
 
     return Scaffold(
       backgroundColor: scaffoldBg,
@@ -63,7 +64,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
               ),
             ),
             const SizedBox(width: 12),
-            Column(
+            const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -79,7 +80,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   'Online',
                   style: TextStyle(
                     fontFamily: 'SFProDisplay',
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white,
                     fontSize: 12,
                   ),
                 ),
@@ -92,15 +93,26 @@ class _ChatBotPageState extends State<ChatBotPage> {
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               padding: const EdgeInsets.all(20),
-              itemCount: _messages.length,
+              itemCount: chatVm.messages.length + (chatVm.isLoading ? 1 : 0),
               itemBuilder: (context, index) {
-                final msg = _messages[index];
+                if (index == chatVm.messages.length) {
+                  return const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: LottieAILoding(),
+                    ),
+                  );
+                }
+
+                final msg = chatVm.messages[index];
                 return _buildChatBubble(msg['text'], msg['isMe'], msg['time']);
               },
             ),
           ),
-          _buildInputSection(primaryGreen),
+          _buildInputSection(primaryGreen, chatVm, authState),
         ],
       ),
     );
@@ -138,25 +150,31 @@ class _ChatBotPageState extends State<ChatBotPage> {
                 ),
               ],
             ),
-            child: Text(
-              text,
-              style: TextStyle(
-                fontFamily: 'SFProDisplay',
-                color: isMe ? Colors.white : Colors.black87,
-                fontSize: 15,
-                height: 1.4,
-              ),
-            ),
+            child: isMe
+                ? Text(
+                    text,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      height: 1.4,
+                    ),
+                  )
+                : MarkdownBody(
+                    data: text,
+                    styleSheet: MarkdownStyleSheet(
+                      p: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
               time,
-              style: TextStyle(
-                fontFamily: 'SFProDisplay',
-                color: Colors.grey[400],
-                fontSize: 11,
-              ),
+              style: TextStyle(color: Colors.grey[400], fontSize: 11),
             ),
           ),
           const SizedBox(height: 8),
@@ -165,19 +183,14 @@ class _ChatBotPageState extends State<ChatBotPage> {
     );
   }
 
-  Widget _buildInputSection(Color primaryColor) {
+  Widget _buildInputSection(
+    Color primaryColor,
+    ChatViewModel chatVm,
+    AuthState authState,
+  ) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Row(
         children: [
           Expanded(
@@ -189,12 +202,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
               ),
               child: TextField(
                 controller: _messageController,
+                enabled: !chatVm.isLoading,
                 decoration: InputDecoration(
                   hintText: 'Tanya sesuatu ke Nana...',
-                  hintStyle: TextStyle(
-                    fontFamily: 'SFProDisplay',
-                    color: Colors.grey[500],
-                  ),
+                  hintStyle: TextStyle(color: Colors.grey[500]),
                   border: InputBorder.none,
                 ),
               ),
@@ -202,18 +213,20 @@ class _ChatBotPageState extends State<ChatBotPage> {
           ),
           const SizedBox(width: 12),
           GestureDetector(
-            onTap: () {
-              if (_messageController.text.isNotEmpty) {
-                setState(() {
-                  _messages.add({
-                    'isMe': true,
-                    'text': _messageController.text,
-                    'time': '09:02',
-                  });
-                  _messageController.clear();
-                });
-              }
-            },
+            onTap: chatVm.isLoading
+                ? null
+                : () async {
+                    final text = _messageController.text;
+                    if (text.isNotEmpty) {
+                      _messageController.clear();
+
+                      _scrollToBottom();
+
+                      await chatVm.sendMessage(text, authState);
+
+                      _scrollToBottom();
+                    }
+                  },
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
