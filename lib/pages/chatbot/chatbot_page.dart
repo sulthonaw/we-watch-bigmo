@@ -72,7 +72,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   style: TextStyle(
                     fontFamily: 'SFProDisplay',
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -81,13 +81,39 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   style: TextStyle(
                     fontFamily: 'SFProDisplay',
                     color: Colors.white,
-                    fontSize: 12,
+                    fontSize: 11,
                   ),
                 ),
               ],
             ),
           ],
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Row(
+              children: [
+                const Text(
+                  'Data',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Transform.scale(
+                  scale: 0.7,
+                  child: Switch(
+                    value: chatVm.useUserData,
+                    onChanged: (val) => chatVm.toggleUseUserData(val),
+                    activeColor: Colors.white,
+                    activeTrackColor: const Color(0xFFB1C08B),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -219,11 +245,8 @@ class _ChatBotPageState extends State<ChatBotPage> {
                     final text = _messageController.text;
                     if (text.isNotEmpty) {
                       _messageController.clear();
-
                       _scrollToBottom();
-
                       await chatVm.sendMessage(text, authState);
-
                       _scrollToBottom();
                     }
                   },

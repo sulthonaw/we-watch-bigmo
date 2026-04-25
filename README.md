@@ -2,9 +2,12 @@
 
 Frontend repository for our Hackfest UC 2026 project focused on maternal health innovation through AI-powered digital solutions.
 
-## Backend Repository
+## Repositositories
 
-🔗 https://github.com/rafirh/we-watch-bigmo-backend
+- Frontend Repo : [https://github.com/sulthonaw/we-watch-bigmo](https://github.com/sulthonaw/we-watch-bigmo)
+- Backend Repo : [https://github.com/rafirh/we-watch-bigmo-backend](https://github.com/rafirh/we-watch-bigmo-backend)
+- Clasification Repo : [https://github.com/jevvonn/we-watch-bigmo-classification-model](https://github.com/jevvonn/we-watch-bigmo-classification-model)
+- Web Admin Repo : [https://github.com/jevvonn/we-watch-bigmo-web-admin](https://github.com/jevvonn/we-watch-bigmo-web-admin)
 
 ## Our Team
 
@@ -51,3 +54,5 @@ This application aims to support maternal healthcare services through smart tech
 - 💬 Fine-tuned LLM chatbot with specialist OB-GYN knowledge base
 - 🏥 SATUSEHAT data simulation
 - 📱 Cross-platform mobile application using Flutter
+- 📱 Consultation chat with nurse
+- 📝 Todo

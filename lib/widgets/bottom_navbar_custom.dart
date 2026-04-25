@@ -19,7 +19,7 @@ class BottomNavbarCustom extends StatelessWidget {
         context.push('/chatbot');
         break;
       case 3:
-        // context.push('/todo');
+        context.push('/todo');
         break;
       case 4:
         context.push('/profile');

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:narabuna/auth/auth_state.dart';
 import 'package:narabuna/pages/home/home_view_model.dart';
 import 'package:narabuna/widgets/bottom_navbar_custom.dart';
+import 'package:narabuna/widgets/consultation_card.dart';
 import 'package:narabuna/widgets/pregnancy_status_card.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -92,7 +94,6 @@ class _HomePageState extends State<HomePage> {
     final plans = lastVisit?['followUpPlans'] as List?;
 
     const Color primaryGreen = Color(0xFF537C57);
-    const Color scaffoldBg = Color(0xFFF9F9F5);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -115,7 +116,35 @@ class _HomePageState extends State<HomePage> {
                   ),
 
                   const SizedBox(height: 40),
+                  if (homeVm.consultationRooms != null &&
+                      homeVm.consultationRooms!.isNotEmpty)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Konsultasi Tenaga Medis',
+                        style: TextStyle(
+                          fontFamily: 'SFProDisplay',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
 
+                  const SizedBox(height: 12),
+
+                  if (homeVm.consultationRooms != null)
+                    ...homeVm.consultationRooms!.map((room) {
+                      return ConsultationCard(
+                        room: room,
+                        onTap: () {
+                          context.push(
+                            '/consultation/${room['id']}/${room['partner']['fullName']}',
+                          );
+                        },
+                      );
+                    }).toList(),
+
+                  const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: const Text(
@@ -249,7 +278,7 @@ class _HomePageState extends State<HomePage> {
                   const CircleAvatar(
                     radius: 28,
                     backgroundImage: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGSvEm0etPR7Ny96YCT_MDRqQ8B5TqjA7VPw&s',
+                      'https://i.pinimg.com/280x280_RS/d2/1a/93/d21a93ba03a7babfa8845c5bfa4e322b.jpg',
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -275,34 +304,39 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              Stack(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.notifications,
-                      color: Color(0xFF537C57),
-                      size: 28,
-                    ),
-                  ),
-                  Positioned(
-                    right: 2,
-                    top: 2,
-                    child: Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD38D8D),
+              GestureDetector(
+                onTap: () {
+                  context.push('/notifikasi');
+                },
+                child: Stack(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: const Icon(
+                        Icons.notifications,
+                        color: Color(0xFF537C57),
+                        size: 28,
                       ),
                     ),
-                  ),
-                ],
+                    Positioned(
+                      right: 2,
+                      top: 2,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD38D8D),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -4,10 +4,12 @@ import 'package:narabuna/services/api_client.dart';
 class HomeViewModel extends ChangeNotifier {
   Map<String, dynamic>? _classification;
   Map<String, dynamic>? _visitsData;
+  List<dynamic>? _consultationRooms;
   bool _isLoading = false;
 
   Map<String, dynamic>? get classification => _classification;
   Map<String, dynamic>? get visitsData => _visitsData;
+  List<dynamic>? get consultationRooms => _consultationRooms;
   bool get isLoading => _isLoading;
 
   Future<void> fetchData(String token) async {
@@ -24,10 +26,15 @@ class HomeViewModel extends ChangeNotifier {
           '/me/visits',
           headers: {'Authorization': 'Bearer $token'},
         ),
+        ApiClient.get(
+          '/consultation/rooms',
+          headers: {'Authorization': 'Bearer $token'},
+        ),
       ]);
 
       _classification = results[0];
       _visitsData = results[1];
+      _consultationRooms = results[2];
     } catch (e) {
       debugPrint('Error fetching home data: $e');
     } finally {

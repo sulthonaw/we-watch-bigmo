@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:narabuna/pages/chatbot/chatbot_page.dart';
 import 'package:narabuna/pages/chatbot/chatbot_view_model.dart';
+import 'package:narabuna/pages/consultation/consultation_chat_page.dart';
+import 'package:narabuna/pages/consultation/consultation_chat_view_model.dart';
 import 'package:narabuna/pages/home/home_view_model.dart';
 import 'package:narabuna/pages/kondisi/kondisi_detail_page.dart';
+import 'package:narabuna/pages/kondisi/kondisi_detail_view_model.dart';
 import 'package:narabuna/pages/kondisi/kondisi_view_model.dart';
+import 'package:narabuna/pages/notifikasi/notifikasi_page.dart';
 import 'package:narabuna/pages/profile/profile_page.dart';
 import 'package:narabuna/pages/register/register_view_model.dart';
+import 'package:narabuna/pages/todo/todo_page.dart';
+import 'package:narabuna/pages/todo/todo_view_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:narabuna/pages/home/home_page.dart';
@@ -31,6 +37,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => ChatViewModel()),
         ChangeNotifierProvider(create: (_) => KondisiViewModel()),
+        ChangeNotifierProvider(create: (_) => KondisiDetailViewModel()),
+        ChangeNotifierProvider(create: (_) => TodoViewModel()),
+        ChangeNotifierProvider(create: (_) => ConsultationChatViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -103,10 +112,30 @@ class MyApp extends StatelessWidget {
               noTransitionPage(state, const ProfilePage()),
         ),
         GoRoute(
+          path: '/todo',
+          pageBuilder: (context, state) =>
+              noTransitionPage(state, const TodoPage()),
+        ),
+        GoRoute(
           path: '/kondisi/:id',
           pageBuilder: (context, state) => noTransitionPage(
             state,
             KondisiDetailPage(visitId: state.pathParameters['id'] ?? ''),
+          ),
+        ),
+        GoRoute(
+          path: '/notifikasi',
+          pageBuilder: (context, state) =>
+              noTransitionPage(state, const NotificationPage()),
+        ),
+        GoRoute(
+          path: '/consultation/:id/:name',
+          pageBuilder: (context, state) => noTransitionPage(
+            state,
+            ConsultationChatPage(
+              roomId: state.pathParameters['id'] ?? '',
+              name: state.pathParameters['name'] ?? '',
+            ),
           ),
         ),
       ],
