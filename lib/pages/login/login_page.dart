@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:narabuna/auth/auth_state.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'login_view_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,11 +15,34 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  void _handleLogin() async {
+    final loginVm = context.read<LoginViewModel>();
+    final authState = context.read<AuthState>();
+
+    final success = await loginVm.login(
+      _emailController.text,
+      _passwordController.text,
+      authState,
+    );
+
+    if (success && mounted) {
+      context.go('/home');
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(loginVm.errorMessage ?? 'Login Gagal'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const Color primaryGreen = Color(0xFF537C57);
     const Color scaffoldBg = Color(0xFFF9F9F5);
     const Color inputFillColor = Color(0xFFF2F4EE);
+    final loginVm = context.watch<LoginViewModel>();
 
     return Scaffold(
       backgroundColor: scaffoldBg,
@@ -95,29 +122,39 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     height: 56,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: loginVm.isLoading ? null : _handleLogin,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryGreen,
+                        disabledBackgroundColor: primaryGreen.withOpacity(0.6),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        'Masuk',
-                        style: TextStyle(
-                          fontFamily: 'SFProDisplay',
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: loginVm.isLoading
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              'Masuk',
+                              style: TextStyle(
+                                fontFamily: 'SFProDisplay',
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   Center(
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () => context.push('/register'),
                       child: RichText(
                         text: TextSpan(
                           text: 'Belum punya akun? ',
